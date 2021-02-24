@@ -1,5 +1,6 @@
 import React from 'react'
 import {signIn,} from './core'
+import {validateUsername, validatePassword} from './libs/validators'
 
 class SignInForm extends React.Component {
 
@@ -22,11 +23,17 @@ class SignInForm extends React.Component {
 
     signIn = async () => {
         const {username, password} = this.state
-        let response = await signIn(username, password)
-        if (response.message)
-            this.setState(({message: response.message}))
-        else
-            await this.props.updateToken(response.accessToken)
+        try {
+            if (validateUsername(username) && validatePassword(password)) {
+                let response = await signIn(username, password)
+                if (response.message)
+                    this.setState(({message: response.message}))
+                else
+                    await this.props.updateToken(response.accessToken)
+            }
+        } catch (e) {
+            this.setState(({message: e.message}))
+        }
     }
 
 

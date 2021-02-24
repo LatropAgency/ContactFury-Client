@@ -1,5 +1,6 @@
 import React from 'react'
-import {signUp, validatePhoneNumber, validateUsername, validatePassword} from './core'
+import {signUp} from './core'
+import {validateUsername, validatePhoneNumber, validatePassword} from "./libs/validators";
 
 class SignUpForm extends React.Component {
 
@@ -27,15 +28,13 @@ class SignUpForm extends React.Component {
 
     signUp = async () => {
         const {username, password, phone_number} = this.state
-        if (!validateUsername(username)) {
-            this.setState({message: "Invalid username"})
-        } else if (!validatePhoneNumber(phone_number)) {
-            this.setState({message: "Invalid phone number"})
-        } else if (!validatePassword(password)) {
-            this.setState({message: "Invalid password"})
-        } else {
-            let response = await signUp(username, password, phone_number)
-            this.setState(({message: response.message}))
+        try {
+            if (validateUsername(username) && validatePhoneNumber(phone_number) && validatePassword(password)) {
+                let response = await signUp(username, password, phone_number)
+                this.setState(({message: response.message}))
+            }
+        } catch (e) {
+            this.setState({message: e.message})
         }
     }
 

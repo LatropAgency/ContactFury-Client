@@ -1,5 +1,6 @@
 import React from 'react'
-import {updateContact, validateName, validatePhoneNumber} from "./core";
+import {updateContact} from "./core";
+import {validateName, validatePhoneNumber} from "./libs/validators";
 
 class UpdateContact extends React.Component {
 
@@ -27,14 +28,14 @@ class UpdateContact extends React.Component {
 
     updateContact = async () => {
         const {id, name, phone_number, categoryId} = this.state
-        if (!validateName(name)) {
-            this.setState({message: "Invalid name"})
-        } else if (!validatePhoneNumber(phone_number)) {
-            this.setState({message: "Invalid phone number"})
-        } else {
-            let response = await updateContact(this.props.token, id, name, phone_number, categoryId)
-            this.props.parent.setState({isCreate: false, isUpdate: false, selected: response, isSelected: true})
-            await this.props.reloadComponent()
+        try {
+            if (validateName(name) && validatePhoneNumber(phone_number)) {
+                let response = await updateContact(this.props.token, id, name, phone_number, categoryId)
+                this.props.parent.setState({isCreate: false, isUpdate: false, selected: response, isSelected: true})
+                await this.props.reloadComponent()
+            }
+        } catch (e) {
+            this.setState({message: e.message})
         }
     }
 

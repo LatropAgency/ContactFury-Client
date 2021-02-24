@@ -190,22 +190,6 @@ async function changePassword(token, password, newPassword) {
         return await response.json()
 }
 
-function validatePhoneNumber(phone_number) {
-    return phone_number.match(/^(29|33|44|25)[0-9]{7}$/)
-}
-
-function validateUsername(username) {
-    return username.match(/^[A-Za-z0-9_]{6,}$/)
-}
-
-function validatePassword(password) {
-    return password.match(/^[A-Za-z0-9_.()+,~=?-@#$%^&*!]{6,}$/)
-}
-
-function validateName(name) {
-    return name.match(/^[А-Яа-яA-Za-z0-9_ ]{3,}$/)
-}
-
 export {
     updateContact,
     createContact,
@@ -217,9 +201,4 @@ export {
     getContacts,
     getCurrentUser,
     changePassword,
-    validatePhoneNumber,
-    validateUsername,
-    validatePassword,
-    validateName,
 }
-export default signIn

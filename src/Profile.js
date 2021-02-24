@@ -1,5 +1,6 @@
 import React from 'react'
-import {changePassword, validatePassword} from "./core";
+import {changePassword} from "./core";
+import {validatePassword} from "./libs/validators";
 
 class Profile extends React.Component {
 
@@ -33,11 +34,15 @@ class Profile extends React.Component {
         const {password, newPassword, repeatPassword} = this.state
         if (newPassword === repeatPassword) {
             if (newPassword.length >= 6) {
-                if (validatePassword(newPassword)) {
-                    let response = await changePassword(this.props.globalComponent.state.token, password, newPassword)
-                    this.setState({message: response.message})
-                } else
-                    this.setState({message: 'Invalid characters in new password'})
+                try {
+                    if (validatePassword(newPassword)) {
+                        let response = await changePassword(this.props.globalComponent.state.token, password, newPassword)
+                        this.setState({message: response.message})
+                    } else
+                        this.setState({message: 'Invalid characters in new password'})
+                } catch (e) {
+                    this.setState({message: e.message})
+                }
             } else {
                 this.setState({message: 'New password is too short'})
             }

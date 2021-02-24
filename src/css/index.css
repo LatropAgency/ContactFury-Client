@@ -106,3 +106,7 @@ span.message {
     top: 10px;
     left: 0;
 }
+
+.message {
+    font-size: 13px;
+}
