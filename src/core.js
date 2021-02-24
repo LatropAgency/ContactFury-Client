@@ -92,7 +92,7 @@ async function getContacts(token, page = 0, categoryId = null, name = null) {
 }
 
 async function deleteContact(token, id) {
-    var url = new URL(`https://contactfury.herokuapp.com/contact/${id}`)
+    var url = new URL(`https://contactfury.herokuapp.com/api/contact/${id}`)
     let response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -191,7 +191,7 @@ async function changePassword(token, password, newPassword) {
 }
 
 function validatePhoneNumber(phone_number) {
-    return phone_number.match(/^(29|33|44)[0-9]{7}$/)
+    return phone_number.match(/^(29|33|44|25)[0-9]{7}$/)
 }
 
 function validateUsername(username) {
