@@ -112,7 +112,7 @@ async function getContactCount(token, categoryId = null, name = null) {
         params.categoryId = Number(categoryId)
     if (name)
         params.name = name
-    var url = new URL('https://contactfury.herokuapp.com/contact/count')
+    var url = new URL('https://contactfury.herokuapp.com/api/contact/count')
     url.search = new URLSearchParams(params)
     let response = await fetch(url, {
         method: "GET",
