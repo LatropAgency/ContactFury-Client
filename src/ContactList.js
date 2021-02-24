@@ -3,9 +3,9 @@ import React from 'react'
 const ContactList = ({changeSearchName, dropFilters, switchToCreate, loadMore, changeSelected, parent, changeSelectedCategory}) => {
 
     return (
-        <div className={"contact_list_wrapper"}>
-            <div className="contact_list">
-                <h3>Contact List({parent.state.contacts.length}/{parent.state.count})</h3>
+        <div className="contact_list_wrapper">
+            <div className="contact_filter contact_list">
+                <h3>Filter</h3>
                 <input id="search_name" type="text" placeholder="search" onChange={changeSearchName}/>
                 <select id="search_category" onChange={changeSelectedCategory}>
                     {parent.state.categories.map(({id, name}) => {
@@ -13,6 +13,9 @@ const ContactList = ({changeSearchName, dropFilters, switchToCreate, loadMore, c
                     })}
                 </select>
                 <button onClick={dropFilters}>Drop</button>
+            </div>
+            <div className="contact_list">
+                <h3>Contact List({parent.state.contacts.length}/{parent.state.count})</h3>
                 <button onClick={switchToCreate}>Create</button>
                 {Boolean(parent.state.contacts.length) && (
                     <div className="contact_items">
