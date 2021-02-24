@@ -1,0 +1,16 @@
+header {
+    margin: 20px 0;
+}
+
+.logo {
+    margin: auto 0;
+}
+
+.header__topline {
+    display: flex;
+    border-radius: 5px 0 0 5px;
+    height: 40px;
+    justify-content: space-between;
+    background: #292929;
+    padding: 0 0 0 10px;
+}

@@ -1,0 +1,31 @@
+@media only screen and (max-width : 480px) {
+    .container {
+        width: 90%;
+    }
+}
+
+
+@media only screen and (max-width : 360px) {
+    .signin, .signup {
+        max-width: 290px;
+    }
+    div.contact_list_wrapper, div.contact_card, div.contact_create, div.contact_update, div.profile_card {
+        width: 280px;
+    }
+}
+
+
+@media only screen and (max-width : 890px) {
+    div.contact_row {
+        flex-direction: column;
+    }
+
+    div.contact_list_wrapper {
+        order: 1;
+        margin: 10px auto;
+    }
+
+    div.contact_info {
+        margin: 10px auto;
+    }
+}
