@@ -58,13 +58,13 @@ class App extends React.Component {
                     {!this.state.isAuth && (
                         <Auth globalComponent={this}/>
                     )}
-                    {this.state.isAuth && this.state.isProfile && (
+                    {this.state.isAuth && this.state.isProfile && !this.state.isUserList && (
                         <Profile globalComponent={this}/>
                     )}
-                    {this.state.isAuth && this.state.isUserList && (
+                    {this.state.isAuth && this.state.isUserList && !this.state.isProfile && (
                         <UserList globalComponent={this}/>
                     )}
-                    {this.state.isAuth && !this.state.isProfile && (
+                    {this.state.isAuth && !this.state.isProfile && !this.state.isUserList && (
                         <Contact globalState={this.state} token={this.state.token}/>
                     )}
                 </section>
