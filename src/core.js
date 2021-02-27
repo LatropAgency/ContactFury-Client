@@ -190,6 +190,25 @@ async function changePassword(token, password, newPassword) {
         return await response.json()
 }
 
+async function getUsers(token, page = 0, username = null) {
+    let params = {'page': page}
+    if (username)
+        params.nausernameme = username
+    var url = new URL('https://contactfury.herokuapp.com/api/user/all')
+    url.search = new URLSearchParams(params)
+    let response = await fetch(url, {
+        method: "GET",
+        headers: {
+            'x-access-token': token,
+        },
+    })
+
+    if (response.ok) {
+        return await response.json()
+    } else
+        return false
+}
+
 export {
     updateContact,
     createContact,
@@ -201,4 +220,5 @@ export {
     getContacts,
     getCurrentUser,
     changePassword,
+    getUsers,
 }

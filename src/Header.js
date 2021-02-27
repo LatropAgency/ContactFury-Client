@@ -9,7 +9,11 @@ class Header extends React.Component {
     }
 
     changeProfile = () => {
-        this.props.globalComponent.setState(({isProfile: true}))
+        this.props.globalComponent.setState(({isProfile: true, isUserList: false}))
+    }
+
+    changeUserList = () => {
+        this.props.globalComponent.setState(({isUserList: true, isProfile: false}))
     }
 
     render() {
@@ -20,6 +24,7 @@ class Header extends React.Component {
                         <div className="logo">ContactFury</div>
                         {this.props.globalComponent.state.isAuth && (
                             <div>
+                                <button className="user_list" onClick={this.changeUserList}>users</button>
                                 <button className="profile"
                                         onClick={this.changeProfile}>{this.props.globalComponent.state.user.username}</button>
                                 <button className="logout" onClick={this.logout}>logout</button>

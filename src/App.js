@@ -7,6 +7,7 @@ import {getCurrentUser} from "./core";
 import Auth from "./Auth";
 import Profile from "./Profile";
 import Contact from "./Contact";
+import UserList from "./UserList";
 
 class App extends React.Component {
 
@@ -45,6 +46,7 @@ class App extends React.Component {
             token: null,
             isAuth: false,
             isProfile: false,
+            isUserList: false,
         }
     }
 
@@ -58,6 +60,9 @@ class App extends React.Component {
                     )}
                     {this.state.isAuth && this.state.isProfile && (
                         <Profile globalComponent={this}/>
+                    )}
+                    {this.state.isAuth && this.state.isUserList && (
+                        <UserList globalComponent={this}/>
                     )}
                     {this.state.isAuth && !this.state.isProfile && (
                         <Contact globalState={this.state} token={this.state.token}/>

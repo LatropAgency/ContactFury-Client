@@ -46,7 +46,7 @@
     display: flex;
 }
 
-.contact_card, .contact_create, .contact_update, .profile_card {
+.contact_card, .contact_create, .contact_update, .profile_card, .users_card {
     background: #292929;
     width: 300px;
     padding: 10px 10px 10px 10px;
@@ -54,11 +54,11 @@
     border-radius: 5px;
 }
 
-.contact_create input, .contact_update input, select, .profile_card input {
+.contact_create input, .contact_update input, select, .profile_card input, .users_card input {
     width: 100%;
 }
 
-.contact h3, .profile_card h3 {
+.contact h3, .profile_card h3, .users_card h3 {
     text-align: center;
     margin: 0 10px 10px 0;
 }
