@@ -17,6 +17,7 @@ class App extends React.Component {
             this.setState(({
                 isProfile: false,
                 isAuth: true,
+                isUserList: false,
                 token: token,
                 user: {
                     id: user.id,
@@ -37,6 +38,7 @@ class App extends React.Component {
                 this.setState(({
                     isProfile: false,
                     isAuth: true,
+                    isUserList: false,
                     token: token,
                     user: {
                         id: user.id,

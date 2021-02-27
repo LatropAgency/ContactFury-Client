@@ -4,10 +4,6 @@ import {validatePassword} from "./libs/validators";
 
 class Profile extends React.Component {
 
-    close = async () => {
-        this.props.globalComponent.setState(({isProfile: false}))
-    }
-
     constructor() {
         super();
         this.state = {
@@ -64,10 +60,7 @@ class Profile extends React.Component {
                         <input type="password" onChange={this.changePassword} placeholder="current password"/>
                         <input type="password" onChange={this.changeNewPassword} placeholder="new password"/>
                         <input type="password" onChange={this.changeRepeatPassword} placeholder="repeat new password"/>
-                        <div className="btn_row">
-                            <button onClick={this.changeUserPassword}>change</button>
-                            <button onClick={this.close}>close</button>
-                        </div>
+                        <button onClick={this.changeUserPassword}>change</button>
                     </div>
                 </div>
             </div>

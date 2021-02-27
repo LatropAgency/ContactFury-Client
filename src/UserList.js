@@ -1,55 +1,74 @@
 import React from 'react'
-import {getCategories, getContacts, getUsers} from "./core";
+import {getUsers, banUsers} from "./core";
 
 class UserList extends React.Component {
 
     componentDidMount = async () => {
         const {token} = this.props;
         let users = await getUsers(token);
-        this.setState({users: users});
+        await this.setState({users: users});
+        await this.setState((state) => ({page: state.page + 1}));
         if ((await getUsers(token, this.state.page)).length === 0)
-            this.state.isVisible = false;
+            await this.setState({isVisible: false});
     }
+
+    banUser = async (id) => {
+        try {
+            let response = await banUsers(this.props.token, id);
+            await this.dropFilters()
+            await this.setState({message: response.message});
+        } catch (e) {
+            await this.setState({message: e.message});
+        }
+    }
+
 
     constructor() {
         super();
         this.state = {
             users: [],
             message: null,
-            username: null,
-            phone_number: null,
             isVisible: true,
+            username: null,
             page: 0,
         }
     }
 
-    close = async () => {
-        this.props.globalComponent.setState(({isUserList: false}))
-    }
-
-    changeUsername = (e) => {
+    changeUsername = async (e) => {
         if (e.target.value.length > 2) {
-            this.setState({username: e.target.value})
+            this.setState(({username: e.target.value}));
+            await this.reloadComponent(e.target.value);
         }
     }
 
-    changePhoneNumber = (e) => {
-        if (e.target.value.length > 2) {
-            this.setState({phone_number: e.target.value})
-        }
+    reloadComponent = async (username = null) => {
+        await this.setState(({
+            users: [],
+            message: null,
+            isVisible: true,
+            username: username,
+            page: 0,
+        }));
+        await this.changeUsers(username);
     }
 
-    changeUsers = async (username = null, phone_number = null) => {
+    dropFilters = async () => {
+        await this.reloadComponent();
+        let usernameField = document.querySelector('#username');
+        usernameField.value = '';
+    }
+
+    changeUsers = async (username = null) => {
         const {token} = this.props
-        let newUsers = await getUsers(token, this.state.page, username, phone_number)
-        this.setState((state) => ({contacts: [...state.users, ...newUsers]}))
+        let newUsers = await getUsers(token, this.state.page, username);
+        await this.setState((state) => ({users: [...state.users, ...newUsers]}))
         await this.setState((state) => ({page: state.page + 1}))
-        if ((await getUsers(token, this.state.page, username, phone_number)).length === 0)
-            this.state.isVisible = false
+        if ((await getUsers(token, this.state.page, username)).length === 0)
+            await this.setState({isVisible: false});
     }
 
     loadMore = async () => {
-        await this.changeUsers()
+        await this.changeUsers(this.state.username)
     }
 
     render() {
@@ -59,24 +78,26 @@ class UserList extends React.Component {
                     <div className="users_card">
                         <h3>Users</h3>
                         {this.state.message && (<span className="message">{this.state.message}</span>)}
-                        <input type="text" onChange={this.changeUsername} placeholder="username"/>
-                        <div className="phone_number">
-                            <input type="text" id="phone_number" onChange={this.changePhoneNumber} placeholder="phone number"/>
-                        </div>
+                        <input type="text" onChange={this.changeUsername} id="username" placeholder="username"/>
+                        <button className="drop" onClick={this.dropFilters}>Drop</button>
                         {Boolean(this.state.users.length) && (
-                            <div className="contact_items">
-                                {this.state.users.map((user) => {
+                            <div className="user_items">
+                                {this.state.users.map(({id, username, phone_number, isBanned}) => {
                                     return (
-                                        <div className="contact_item" key={user.id}>
-                                            <div>{user.username}</div>
-                                            <div>+375{user.phone_number}</div>
+                                        <div className="user_item" key={id}>
+                                            <div>
+                                                <div>{username}</div>
+                                                <div>+375{phone_number}</div>
+                                            </div>
+                                            <button value={id} onClick={() => this.banUser(id)}>{isBanned && (
+                                                <span>unbun</span>)}{!isBanned && (<span>bun</span>)}</button>
                                         </div>
                                     )
                                 })}
                             </div>
                         )}
                         {Boolean(this.state.users.length) && this.state.isVisible && (
-                            <button onClick={this.loadMore}>Load More</button>)}
+                            <button className="load_more" onClick={this.loadMore}>Load More</button>)}
                     </div>
                 </div>
             </div>

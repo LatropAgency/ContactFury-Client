@@ -29,27 +29,27 @@ class Contact extends React.Component {
         let categories = await getCategories(this.props.globalState.token)
         this.setState(({categories: categories}))
         let selectedCategoryField = document.querySelector('#search_category')
-        selectedCategoryField.value = null
-        await this.changeContacts()
-        await this.selectFirst()
+        selectedCategoryField.value = null;
+        await this.changeContacts();
+        await this.selectFirst();
     }
 
     deleteContact = async () => {
-        await deleteContact(this.props.globalState.token, this.state.selected.id)
-        await this.reloadComponent()
+        await deleteContact(this.props.globalState.token, this.state.selected.id);
+        await this.reloadComponent();
     }
 
     switchUpdate = async () => {
-        this.setState(({isUpdate: true}))
+        this.setState(({isUpdate: true}));
     }
 
     selectFirst = async () => {
         if (this.state.contacts.length) {
             this.state.categories.forEach((category) => {
                 if (category.id === this.state.contacts[0].categoryId)
-                    this.state.contacts[0].category = category.name
+                    this.state.contacts[0].category = category.name;
             })
-            await this.setState({selected: this.state.contacts[0], isSelected: true})
+            await this.setState({selected: this.state.contacts[0], isSelected: true});
         }
     }
 
@@ -58,7 +58,7 @@ class Contact extends React.Component {
             if (category.id === newSelected.categoryId)
                 newSelected.category = category.name
         })
-        this.setState(({selected: newSelected, isSelected: true, isUpdate: false, isCreate: false}))
+        this.setState(({selected: newSelected, isSelected: true, isUpdate: false, isCreate: false}));
     }
 
     changeContacts = async (selectedCategory = null, searchName = null) => {
@@ -67,21 +67,21 @@ class Contact extends React.Component {
         this.setState((state) => ({contacts: [...state.contacts, ...newContacts]}))
         await this.setState((state) => ({page: state.page + 1}))
         if ((await getContacts(token, this.state.page, selectedCategory, searchName)).length === 0)
-            this.state.isVisible = false
-        await this.getContactCount()
+            await this.setState({isVisible: false});
+        await this.getContactCount();
     }
 
     loadMore = async () => {
-        await this.changeContacts()
+        await this.changeContacts();
     }
 
     getContactCount = async () => {
         let response = await getContactCount(this.props.globalState.token, this.state.selectedCategory, this.state.searchName)
-        await this.setState(({count: response.count}))
+        await this.setState(({count: response.count}));
     }
 
     switchToCreate = async () => {
-        this.setState(({isCreate: true, isUpdate: false}))
+        this.setState(({isCreate: true, isUpdate: false}));
     }
 
     reloadComponent = async (selectedCategory = null, searchName = null) => {
@@ -96,28 +96,31 @@ class Contact extends React.Component {
             count: 0,
             selectedCategory: selectedCategory,
             searchName: searchName,
-        }))
-        let selectedCategoryField = document.querySelector('#search_category')
-        selectedCategoryField.value = null
-        await this.changeContacts(selectedCategory, searchName)
-        await this.selectFirst()
+        }));
+        let selectedCategoryField = document.querySelector('#search_category');
+        selectedCategoryField.value = null;
+        await this.changeContacts(selectedCategory, searchName);
+        await this.selectFirst();
     }
 
     dropFilters = async () => {
-        await this.reloadComponent()
-        let searchNameField = document.querySelector('#search_name')
-        searchNameField.value = ''
-        let selectedCategory = document.querySelector('#search_category')
-        selectedCategory.value = null
+        await this.reloadComponent();
+        let searchNameField = document.querySelector('#search_name');
+        searchNameField.value = '';
+        let selectedCategory = document.querySelector('#search_category');
+        selectedCategory.value = null;
     }
 
     changeSelectedCategory = async (e) => {
-        await this.reloadComponent(e.target.value, this.state.searchName)
+        await this.setState(({selectedCategory: e.target.value}));
+        await this.reloadComponent(e.target.value, this.state.searchName);
     }
 
     changeSearchName = async (e) => {
-        if (e.target.value.length > 2)
-            await this.reloadComponent(this.state.selectedCategory, e.target.value)
+        if (e.target.value.length > 2) {
+            await this.setState(({searchName: e.target.value}));
+            await this.reloadComponent(this.state.selectedCategory, e.target.value);
+        }
     }
 
     render() {
