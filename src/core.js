@@ -3,7 +3,7 @@ async function signIn(username, password) {
         username: username,
         password: password,
     }
-    var url = new URL('https://contactfury.herokuapp.com/api/auth/signin')
+    let url = new URL('http://localhost:4000/api/auth/signin')
     let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -15,8 +15,10 @@ async function signIn(username, password) {
 
     if (response.ok) {
         return await response.json()
-    } else
-        return await response.json()
+    } else {
+        let errorResponse = await response.json();
+        throw new Error(errorResponse.message);
+    }
 }
 
 async function signUp(username, password, phone_number) {
@@ -25,7 +27,7 @@ async function signUp(username, password, phone_number) {
         phone_number: phone_number,
         password: password,
     }
-    var url = new URL('https://contactfury.herokuapp.com/api/auth/signup')
+    var url = new URL('http://localhost:4000/api/auth/signup')
     let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -37,12 +39,14 @@ async function signUp(username, password, phone_number) {
 
     if (response.ok) {
         return await response.json()
-    } else
-        return await response.json()
+    } else {
+        let errorResponse = await response.json();
+        throw new Error(errorResponse.message);
+    }
 }
 
 async function getCurrentUser(token) {
-    var url = new URL('https://contactfury.herokuapp.com/api/user')
+    var url = new URL('http://localhost:4000/api/user')
     let response = await fetch(url, {
         method: "GET",
         headers: {
@@ -57,7 +61,7 @@ async function getCurrentUser(token) {
 }
 
 async function getCategories(token) {
-    var url = new URL('https://contactfury.herokuapp.com/api/category')
+    var url = new URL('http://localhost:4000/api/category')
     let response = await fetch(url, {
         method: "GET",
         headers: {
@@ -76,7 +80,7 @@ async function getContacts(token, page = 0, categoryId = null, name = null) {
         params.categoryId = categoryId
     if (name)
         params.name = name
-    var url = new URL('https://contactfury.herokuapp.com/api/contact')
+    var url = new URL('http://localhost:4000/api/contact')
     url.search = new URLSearchParams(params)
     let response = await fetch(url, {
         method: "GET",
@@ -92,7 +96,7 @@ async function getContacts(token, page = 0, categoryId = null, name = null) {
 }
 
 async function deleteContact(token, id) {
-    var url = new URL(`https://contactfury.herokuapp.com/api/contact/${id}`)
+    var url = new URL(`http://localhost:4000/api/contact/${id}`)
     let response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -112,7 +116,7 @@ async function getContactCount(token, categoryId = null, name = null) {
         params.categoryId = Number(categoryId)
     if (name)
         params.name = name
-    var url = new URL('https://contactfury.herokuapp.com/api/contact/count')
+    var url = new URL('http://localhost:4000/api/contact/count')
     url.search = new URLSearchParams(params)
     let response = await fetch(url, {
         method: "GET",
@@ -126,7 +130,7 @@ async function getContactCount(token, categoryId = null, name = null) {
 }
 
 async function createContact(token, name, phone_number, categoryId) {
-    var url = new URL('https://contactfury.herokuapp.com/api/contact')
+    var url = new URL('http://localhost:4000/api/contact')
     let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -148,7 +152,7 @@ async function createContact(token, name, phone_number, categoryId) {
 }
 
 async function updateContact(token, contact_id, name, phone_number, categoryId) {
-    var url = new URL(`https://contactfury.herokuapp.com/api/contact/${contact_id}`)
+    var url = new URL(`http://localhost:4000/api/contact/${contact_id}`)
     let response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -170,7 +174,7 @@ async function updateContact(token, contact_id, name, phone_number, categoryId) 
 }
 
 async function changePassword(token, password, newPassword) {
-    var url = new URL('https://contactfury.herokuapp.com/api/user')
+    var url = new URL('http://localhost:4000/api/user')
     let response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -190,12 +194,15 @@ async function changePassword(token, password, newPassword) {
         return await response.json()
 }
 
-async function getUsers(token, page = 0, username = null) {
+async function getUsers(token, page = 0, username = null, phone_number = null) {
     let params = {'page': page}
     if (username)
-        params.nausernameme = username
-    var url = new URL('https://contactfury.herokuapp.com/api/user/all')
+        params.username = username
+    if (phone_number)
+        params.phone_number = phone_number
+    var url = new URL('http://localhost:4000/api/user/all')
     url.search = new URLSearchParams(params)
+    console.log('url')
     let response = await fetch(url, {
         method: "GET",
         headers: {
@@ -209,12 +216,18 @@ async function getUsers(token, page = 0, username = null) {
         return false
 }
 
+function setEmpty(querySelector) {
+    let element = document.querySelector(querySelector);
+    element.value = null;
+}
+
 export {
     updateContact,
     createContact,
     getCategories,
     getContactCount,
     signIn,
+    setEmpty,
     signUp,
     deleteContact,
     getContacts,

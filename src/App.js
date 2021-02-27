@@ -12,29 +12,39 @@ import UserList from "./UserList";
 class App extends React.Component {
 
     updateToken = async (token) => {
-        let user = await getCurrentUser(token)
+        let user = await getCurrentUser(token);
         if (user) {
             this.setState(({
                 isProfile: false,
                 isAuth: true,
                 token: token,
-                user: {id: user.id, username: user.username, phone_number: user.phone_number}
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    phone_number: user.phone_number,
+                    roleId: user.roleId,
+                }
             }))
-            localStorage.setItem("token", token)
+            localStorage.setItem("token", token);
         }
     }
 
     componentDidMount = async () => {
-        let token = localStorage.getItem("token")
+        let token = localStorage.getItem("token");
         if (token) {
-            let user = await getCurrentUser(token)
+            let user = await getCurrentUser(token);
             if (user) {
                 this.setState(({
                     isProfile: false,
                     isAuth: true,
                     token: token,
-                    user: {id: user.id, username: user.username, phone_number: user.phone_number}
-                }))
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        phone_number: user.phone_number,
+                        roleId: user.roleId,
+                    }
+                }));
             }
         }
     }
@@ -42,7 +52,12 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            user: {id: null, username: null, phone_number: null},
+            user: {
+                id: null,
+                username: null,
+                phone_number: null,
+                roleId: null,
+            },
             token: null,
             isAuth: false,
             isProfile: false,
@@ -62,7 +77,7 @@ class App extends React.Component {
                         <Profile globalComponent={this}/>
                     )}
                     {this.state.isAuth && this.state.isUserList && !this.state.isProfile && (
-                        <UserList globalComponent={this}/>
+                        <UserList globalComponent={this} token={this.state.token}/>
                     )}
                     {this.state.isAuth && !this.state.isProfile && !this.state.isUserList && (
                         <Contact globalState={this.state} token={this.state.token}/>

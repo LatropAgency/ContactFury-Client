@@ -14,7 +14,10 @@ class Header extends React.Component {
     }
 
     switchForm = () => {
-        this.setState((state) => ({isSignIn: !state.isSignIn, isSignUp: !state.isSignUp}))
+        this.setState((state) => ({
+            isSignIn: !state.isSignIn,
+            isSignUp: !state.isSignUp,
+        }));
     }
 
     render() {
@@ -27,8 +30,10 @@ class Header extends React.Component {
                         {!this.state.isSignUp && (
                             <SignInForm updateToken={this.props.globalComponent.updateToken}/>)}
                         <div className="change_auth">
-                            You may <button
-                            onClick={this.switchForm}>{this.state.isSignUp && ('sign in')}{this.state.isSignIn && ('sign up')}</button>
+                            You may
+                            <button
+                                onClick={this.switchForm}>{this.state.isSignUp && ('SignIn')}{this.state.isSignIn && ('SignUp')}
+                            </button>
                         </div>
                     </div>
                 </div>

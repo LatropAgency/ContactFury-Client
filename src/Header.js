@@ -24,7 +24,7 @@ class Header extends React.Component {
                         <div className="logo">ContactFury</div>
                         {this.props.globalComponent.state.isAuth && (
                             <div>
-                                <button className="user_list" onClick={this.changeUserList}>users</button>
+                                {Boolean(this.props.globalComponent.state.user.roleId === 1) && (<button className="user_list" onClick={this.changeUserList}>users</button>)}
                                 <button className="profile"
                                         onClick={this.changeProfile}>{this.props.globalComponent.state.user.username}</button>
                                 <button className="logout" onClick={this.logout}>logout</button>

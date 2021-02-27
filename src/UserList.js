@@ -1,11 +1,14 @@
 import React from 'react'
-import {getUsers} from "./core";
+import {getCategories, getContacts, getUsers} from "./core";
 
 class UserList extends React.Component {
 
     componentDidMount = async () => {
-        let users = await getUsers()
-        this.setState({users: users})
+        const {token} = this.props;
+        let users = await getUsers(token);
+        this.setState({users: users});
+        if ((await getUsers(token, this.state.page)).length === 0)
+            this.state.isVisible = false;
     }
 
     constructor() {
@@ -14,6 +17,9 @@ class UserList extends React.Component {
             users: [],
             message: null,
             username: null,
+            phone_number: null,
+            isVisible: true,
+            page: 0,
         }
     }
 
@@ -27,6 +33,25 @@ class UserList extends React.Component {
         }
     }
 
+    changePhoneNumber = (e) => {
+        if (e.target.value.length > 2) {
+            this.setState({phone_number: e.target.value})
+        }
+    }
+
+    changeUsers = async (username = null, phone_number = null) => {
+        const {token} = this.props
+        let newUsers = await getUsers(token, this.state.page, username, phone_number)
+        this.setState((state) => ({contacts: [...state.users, ...newUsers]}))
+        await this.setState((state) => ({page: state.page + 1}))
+        if ((await getUsers(token, this.state.page, username, phone_number)).length === 0)
+            this.state.isVisible = false
+    }
+
+    loadMore = async () => {
+        await this.changeUsers()
+    }
+
     render() {
         return (
             <div className="users">
@@ -35,22 +60,23 @@ class UserList extends React.Component {
                         <h3>Users</h3>
                         {this.state.message && (<span className="message">{this.state.message}</span>)}
                         <input type="text" onChange={this.changeUsername} placeholder="username"/>
+                        <div className="phone_number">
+                            <input type="text" id="phone_number" onChange={this.changePhoneNumber} placeholder="phone number"/>
+                        </div>
                         {Boolean(this.state.users.length) && (
                             <div className="contact_items">
-                                {this.state.users.map((contact, index) => {
-                                    return (<div className="contact_item"
-                                                 key={index}>
-                                        <span>{contact.name}</span>
-                                    </div>)
+                                {this.state.users.map((user) => {
+                                    return (
+                                        <div className="contact_item" key={user.id}>
+                                            <div>{user.username}</div>
+                                            <div>+375{user.phone_number}</div>
+                                        </div>
+                                    )
                                 })}
-                            </div>)}
-                        {Boolean(!this.state.users.length) && (
-                            <h3 className="contact_empty">Empty</h3>
+                            </div>
                         )}
-                        <div className="btn_row">
-                            <button onClick={this.changeUserPassword}>change</button>
-                            <button onClick={this.close}>close</button>
-                        </div>
+                        {Boolean(this.state.users.length) && this.state.isVisible && (
+                            <button onClick={this.loadMore}>Load More</button>)}
                     </div>
                 </div>
             </div>
