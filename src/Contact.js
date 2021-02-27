@@ -71,6 +71,7 @@ class Contact extends React.Component {
         await this.getContactCount();
     }
 
+
     loadMore = async () => {
         await this.changeContacts();
     }
@@ -119,7 +120,24 @@ class Contact extends React.Component {
     changeSearchName = async (e) => {
         if (e.target.value.length > 2) {
             await this.setState(({searchName: e.target.value}));
-            await this.reloadComponent(this.state.selectedCategory, e.target.value);
+            await this.setState(({
+                isVisible: true,
+                isSelected: false,
+                isCreate: false,
+                contacts: [],
+                isUpdate: false,
+                selected: null,
+                page: 0,
+                count: 0,
+            }));
+            const {token} = this.props.globalState
+            let newContacts = await getContacts(token, this.state.page, this.state.selectedCategory, this.state.searchName)
+            this.setState((state) => ({contacts: newContacts}))
+            await this.setState((state) => ({page: state.page + 1}))
+            if ((await getContacts(token, this.state.page, this.state.selectedCategory, this.state.searchName)).length === 0)
+                await this.setState({isVisible: false});
+            await this.getContactCount();
+            await this.selectFirst()
         }
     }
 
