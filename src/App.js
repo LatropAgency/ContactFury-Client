@@ -9,8 +9,8 @@ import Profile from "./Profile";
 import Contact from "./Contact";
 import UserList from "./UserList";
 import AppMessage from "./AppMessage";
+// import {Client} from 'ws';
 
-const rpcWS = require('rpc-websockets').Client;
 
 class App extends React.Component {
 
@@ -37,20 +37,8 @@ class App extends React.Component {
     }
 
     getClient = () => {
-        const client = new rpcWS('wss://contactfury.herokuapp.com:43919');
-        client.on("open", () => {
-            console.log('asdf')
-            client.subscribe("ban");
-        });
-        client.on("ban", (data) => {
-            if (Number(data) === this.state.user.id) {
-                this.setState({message: "You have been banned"});
-                this.setState({isAuth: false});
-                localStorage.removeItem("token");
-                client.close();
-            }
-        })
-        return client;
+        let client = new WebSocket('ws://localhost:4000')
+        return null;
     }
 
     componentDidMount = async () => {

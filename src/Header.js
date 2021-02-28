@@ -4,8 +4,8 @@ import './css/Header.css';
 class Header extends React.Component {
 
     logout = () => {
-        let client = this.props.globalComponent.state.client;
-        client.close();
+        // let client = this.props.globalComponent.state.client;
+        // client.close();
         this.props.globalComponent.setState(({isAuth: false, wsConnection: null}))
         localStorage.removeItem("token")
     }
