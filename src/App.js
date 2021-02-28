@@ -8,16 +8,22 @@ import Auth from "./Auth";
 import Profile from "./Profile";
 import Contact from "./Contact";
 import UserList from "./UserList";
+import AppMessage from "./AppMessage";
+
+const rpcWS = require('rpc-websockets').Client;
 
 class App extends React.Component {
 
     updateToken = async (token) => {
         let user = await getCurrentUser(token);
         if (user) {
+            const client = this.getClient();
             this.setState(({
+                client: client,
                 isProfile: false,
                 isAuth: true,
                 isUserList: false,
+                message: null,
                 token: token,
                 user: {
                     id: user.id,
@@ -30,16 +36,35 @@ class App extends React.Component {
         }
     }
 
+    getClient = () => {
+        const client = new rpcWS('wss://contactfury.herokuapp.com');
+        client.on("open", () => {
+            client.subscribe("ban");
+        });
+        client.on("ban", (data) => {
+            if (Number(data) === this.state.user.id) {
+                this.setState({message: "You have been banned"});
+                this.setState({isAuth: false});
+                localStorage.removeItem("token");
+                client.close();
+            }
+        })
+        return client;
+    }
+
     componentDidMount = async () => {
         let token = localStorage.getItem("token");
         if (token) {
             let user = await getCurrentUser(token);
             if (user) {
+                const client = this.getClient();
                 this.setState(({
+                    client: client,
                     isProfile: false,
                     isAuth: true,
                     isUserList: false,
                     token: token,
+                    message: null,
                     user: {
                         id: user.id,
                         username: user.username,
@@ -54,6 +79,7 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
+            client: null,
             user: {
                 id: null,
                 username: null,
@@ -64,6 +90,7 @@ class App extends React.Component {
             isAuth: false,
             isProfile: false,
             isUserList: false,
+            message: null,
         }
     }
 
@@ -72,6 +99,7 @@ class App extends React.Component {
             <div className="wrapper">
                 <Header globalComponent={this}/>
                 <section className="main">
+                    {this.state.message && (<AppMessage message={this.state.message} />)}
                     {!this.state.isAuth && (
                         <Auth globalComponent={this}/>
                     )}
