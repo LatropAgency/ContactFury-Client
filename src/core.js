@@ -1,4 +1,4 @@
-const HOST = "http://contactfury.herokuapp.com";
+const HOST = "https://contactfury.herokuapp.com";
 
 async function signIn(username, password) {
     let body = {
