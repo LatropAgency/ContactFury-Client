@@ -9,8 +9,6 @@ import Profile from "./Profile";
 import Contact from "./Contact";
 import UserList from "./UserList";
 import AppMessage from "./AppMessage";
-// import {Client} from 'ws';
-
 
 class App extends React.Component {
 
@@ -37,8 +35,18 @@ class App extends React.Component {
     }
 
     getClient = () => {
-        let client = new WebSocket('ws://localhost:4000')
-        return null;
+        let client = new WebSocket('ws://contactfury.herokuapp.com');
+        client.onmessage = (event) => {
+            let json = JSON.parse(event.data);
+            let ban = json.ban || null;
+            const {user} = this.state;
+            if (ban && Number(ban.userId) === user.id) {
+                this.setState({message: 'You have been banned', isAuth: false});
+                localStorage.removeItem("token");
+                client.close();
+            }
+        }
+        return client;
     }
 
     componentDidMount = async () => {
@@ -88,7 +96,7 @@ class App extends React.Component {
             <div className="wrapper">
                 <Header globalComponent={this}/>
                 <section className="main">
-                    {this.state.message && (<AppMessage message={this.state.message} />)}
+                    {this.state.message && (<AppMessage message={this.state.message}/>)}
                     {!this.state.isAuth && (
                         <Auth globalComponent={this}/>
                     )}
