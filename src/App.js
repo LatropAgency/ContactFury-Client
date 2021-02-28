@@ -35,7 +35,7 @@ class App extends React.Component {
     }
 
     getClient = () => {
-        let client = new WebSocket('ws://contactfury.herokuapp.com');
+        let client = new WebSocket('wss://contactfury.herokuapp.com');
         client.onmessage = (event) => {
             let json = JSON.parse(event.data);
             let ban = json.ban || null;
