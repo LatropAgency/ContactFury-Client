@@ -37,7 +37,7 @@ class App extends React.Component {
     }
 
     getClient = () => {
-        const client = new rpcWS('wss://contactfury.herokuapp.com');
+        const client = new rpcWS('ws://contactfury.herokuapp.com');
         client.on("open", () => {
             client.subscribe("ban");
         });
